@@ -12,6 +12,12 @@
 
 import PackageDescription
 
+#if canImport(Darwin)
+let includePrivacyManifest = true
+#else
+let includePrivacyManifest = false
+#endif
+
 let package = Package(
     name: "swift-algorithms",
     products: [
@@ -27,7 +33,10 @@ let package = Package(
             name: "Algorithms",
             dependencies: [
               .product(name: "RealModule", package: "swift-numerics"),
-            ]),
+            ],
+            exclude: includePrivacyManifest ? [] : ["PrivacyInfo.xcprivacy"],
+            resources: includePrivacyManifest ? [.copy("PrivacyInfo.xcprivacy")] : []
+        ),
         .testTarget(
             name: "SwiftAlgorithmsTests",
             dependencies: ["Algorithms"]),
